@@ -1,0 +1,114 @@
+Index: printmsg.c
+===================================================================
+--- printmsg.c	(revisione 74)
++++ printmsg.c	(revisione 75)
+@@ -3,10 +3,11 @@
+ */
+ 
+ void SetUserMsg(char *msg) {
+-  sprintf(UserMessage, msg);
++  strcpy(UserMessage, msg);
+   UserMessageFramesLeft = 120; /* Make the message to be active for 120 frames (2s) */
+ }
+ 
++
+ void PrintMsg(char *txtorgmessage, unsigned char TransparentFlag) {
+   /* TransparentFlag = 1  -->  Do not clear the screen, and do not print background on chars
+      TransparentFlag = 0  --> Clear the screen before doing anything */
+@@ -15,7 +16,7 @@
+   signed int pixrow, pixcol, linenum = 0;
+   int x, textstring_len;
+   char textstring[1024], txtmessage[1024];
+-  snprintf(txtmessage, 1023, txtorgmessage);
++  strncpy(txtmessage, txtorgmessage, 1023);
+   if (TransparentFlag == 0) {
+     for (pixcol = 0; pixcol < 160; pixcol++) {
+       for (pixrow = 0; pixrow < 144; pixrow++) ScreenBuffer[pixcol][pixrow] = 254;
+Index: Makefile.dos
+===================================================================
+--- Makefile.dos	(revisione 74)
++++ Makefile.dos	(revisione 75)
+@@ -1,4 +1,4 @@
+-CFLAGS = -s -std=gnu89 -O3 -Wall -Wextra -pedantic -Wfatal-errors -Wstrict-prototypes -D__zboy4dos__
++CFLAGS = -s -std=gnu89 -O3 -Wall -Wextra -pedantic -Werror=format-security -Wfatal-errors -Wstrict-prototypes -D__zboy4dos__
+ 
+ 
+ all: zboy.exe
+Index: zboy.c
+===================================================================
+--- zboy.c	(revisione 74)
++++ zboy.c	(revisione 75)
+@@ -300,7 +300,7 @@
+     } else {  /* anything else is assumed to be a filename */
+         if (argv[x][0] != 0) { /* ignore if the parameter is empty */
+           if (RomInfos.Filename[0] == 0) {
+-              snprintf(RomInfos.Filename, 1022, argv[x]);
++              strncpy(RomInfos.Filename, argv[x], 1022);
+             } else {
+               RomInfos.Filename[0] = 0;   /* Clear out filename, to make sure to display usage screen later */
+               x = 250;  /* make sure to quit parsing now */
+@@ -374,7 +374,7 @@
+   /* if a custom color palette has been provided, load it */
+   if (zboyparams.custcolor != NULL) {
+     if (LoadPaletteFromFile(zboyparams.custcolor, ScreenPalette32) != 0) {
+-      sprintf(UserMessage, "LOADING THE CUSTOM PALETTE FAILED");
++      strcpy(UserMessage, "LOADING THE CUSTOM PALETTE FAILED");
+       PrintMsg(UserMessage, 0);
+       RefreshScreen(0, 159, 0, 143, &zboyparams);
+       PressAnyKey();
+@@ -470,7 +470,7 @@
+   if (RomInfos.NiceTitle[0] != 0) {
+       snprintf(zboyparams.windowtitle, 256, "%s (zBoy)", RomInfos.NiceTitle);
+     } else {
+-      snprintf(zboyparams.windowtitle, 256, "zBoy");
++      strncpy(zboyparams.windowtitle, "zBoy", 256);
+   }
+   drv_setwintitle(zboyparams.windowtitle);
+ 
+Index: Makefile.win
+===================================================================
+--- Makefile.win	(revisione 74)
++++ Makefile.win	(revisione 75)
+@@ -1,5 +1,5 @@
+ INCLUDE = /mingw/include
+-CFLAGS = -s -std=gnu89 -O3 -Wall -pedantic -Wfatal-errors -Wstrict-prototypes -D__zboy4windows__ -DNETPLAY -DLFNAVAIL
++CFLAGS = -s -std=gnu89 -O3 -Wall -pedantic -Werror=format-security -Wfatal-errors -Wstrict-prototypes -D__zboy4windows__ -DNETPLAY -DLFNAVAIL
+ 
+ 
+ zboy.exe: about.o drv_sdl2.o loadpal.o loadrom.o net_sock.o config.o crc32.o wordwrap.o zboy.o
+Index: Makefile.linux
+===================================================================
+--- Makefile.linux	(revisione 74)
++++ Makefile.linux	(revisione 75)
+@@ -1,4 +1,4 @@
+-CFLAGS = -s -std=gnu89 -O3 -Wall -Wextra -pedantic -Wfatal-errors -Wstrict-prototypes -D__zboy4linux__ -DNETPLAY -DLFNAVAIL
++CFLAGS = -s -std=gnu89 -O3 -Wall -Wextra -pedantic -Werror=format-security -Wfatal-errors -Wstrict-prototypes -D__zboy4linux__ -DNETPLAY -DLFNAVAIL
+ #CFLAGS += -DDEBUGMODE
+ 
+ 
+Index: loadrominfos.c
+===================================================================
+--- loadrominfos.c	(revisione 74)
++++ loadrominfos.c	(revisione 75)
+@@ -19,7 +19,7 @@
+   while ((TempString[x] > 31) && (TempString[x] < 127) && (x < 16)) x++;
+   TempString[x] = 0;   /* Trim all zeroed bytes at the end, as well as high bytes (occuring on new-style licenses) */
+   /*TempString = TRIM(TempString) */       /* Trim any spaces on both ends of the string */
+-  sprintf(RomInfos->Title, TempString);
++  sprintf(RomInfos->Title, "%s", TempString);
+ 
+   /* Now let's see if we can fix the title in any possible way... */
+ 
+Index: mmu.c
+===================================================================
+--- mmu.c	(revisione 74)
++++ mmu.c	(revisione 75)
+@@ -127,7 +127,7 @@
+         }
+       } else {
+         sprintf(UserMessage, "MMU FATAL ERROR!\nTRIED TO RUN LCD OAM DMA TRANSFER USING AN INVALID RANGE!");
+-        printf(UserMessage);
++        printf("%s", UserMessage);
+         PrintMsg(UserMessage, 0);
+         PressAnyKey();
+         exit(0);
