@@ -1,6 +1,6 @@
 Name:           zboy
 Version:        0.60
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A GameBoy emulator
 
 License:        GPLv3
@@ -40,7 +40,7 @@ on a LAN.
 %patch1 -p0
 
 # Use standard Fedora CFLAGS to compile
-sed -i 's/^CFLAGS = -s -std=gnu89 -O3 -Wall -Wextra -pedantic -Werror=format-security -Wfatal-errors -Wstrict-prototypes/CFLAGS +=/' Makefile.linux
+sed -i 's/^CFLAGS = -s -std=gnu89 -O3 -Wall -Wextra -pedantic -Werror=format-security -Wfatal-errors -Wstrict-prototypes/CFLAGS += -std=gnu89/' Makefile.linux
 
 # Fix end-of-line encoding
 for txtfile in license.txt history.txt todo.txt zboy.txt
@@ -51,7 +51,7 @@ done
 
 %build
 export CFLAGS="%{optflags}"
-make %{?_smp_mflags} -f Makefile.linux 
+%make_build -f Makefile.linux
 
 
 %install
@@ -66,6 +66,9 @@ install -p -m 0755 %{name} %{buildroot}%{_bindir}
 
 
 %changelog
+* Sat Mar 25 2017 Andrea Musuruane <musuruan@gmail.com> 0.60-4
+- Fix FTBFS
+
 * Tue Mar 21 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.60-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
