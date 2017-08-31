@@ -1,6 +1,6 @@
 Name:           zboy
 Version:        0.60
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A GameBoy emulator
 
 License:        GPLv3
@@ -66,6 +66,9 @@ install -p -m 0755 %{name} %{buildroot}%{_bindir}
 
 
 %changelog
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.60-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Sat Mar 25 2017 Andrea Musuruane <musuruan@gmail.com> 0.60-4
 - Fix FTBFS
 
