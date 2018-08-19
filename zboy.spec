@@ -1,6 +1,6 @@
 Name:           zboy
 Version:        0.60
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A GameBoy emulator
 
 License:        GPLv3
@@ -66,6 +66,9 @@ install -p -m 0755 %{name} %{buildroot}%{_bindir}
 
 
 %changelog
+* Sun Aug 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 0.60-8
+- Rebuilt for Fedora 29 Mass Rebuild binutils issue
+
 * Fri Jul 27 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 0.60-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
