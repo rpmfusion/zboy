@@ -1,56 +1,49 @@
 Name:           zboy
-Version:        0.60
-Release:        8%{?dist}
-Summary:        A GameBoy emulator
+Version:        0.70
+Release:        1%{?dist}
+Summary:        A GameBoy Classic emulator
 
 License:        GPLv3
 URL:            http://zboy.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-# Fix format strings
-# http://sourceforge.net/p/zboy/code/75/
-Patch0:         %{name}-0.60-sfmt.patch
-# Fix compiling with GCC 5.1
-# http://sourceforge.net/p/zboy/code/85/
-Patch1:         %{name}-0.60-mbc5.patch
 
+BuildRequires:  gcc
 BuildRequires:  SDL2-devel
 
 
 %description
-zBoy is a multiplatform GameBoy emulator that provides a load/save feature,
-can perform PCX screenshots either manually or automatically (every few
-seconds) and emulates an internal battery for ROMs that were designed to use
-one (this allows to use the internal save option provided by such games,
-remember highest scores, etc).
-  
-zBoy supports some additional features, too, like intelligent saving of
+zBoy is a multi-platform, open-source GameBoy Classic ("DMG") emulator that
+provides a load/save feature, can perform PCX screenshots and emulates an
+internal battery for ROMs that were designed to use one. It is also one of
+the very few emulators that make it possible to play games in 2-players mode
+over LAN, emulating a link between two consoles.
+
+zBoy supports many additional features, too, like intelligent saving of
 hi-scores for some games that aren't able to save their hi-scores table by
 themselves because of the lack of a battery-backed RAM on the cartridge, and
 improving screen's resolution output using graphic algorithms like Scale2x,
-Scale3x, eagle... 
-
-It is also one of the very few GameBoy emulators that provides a 2-gameboys 
-link emulation, which makes it possible to play some games in 2-players mode 
-on a LAN.
+Scale3x, Eagle...
 
 
 %prep
 %setup -q
-%patch0 -p0
-%patch1 -p0
 
 # Use standard Fedora CFLAGS to compile
-sed -i 's/^CFLAGS = -s -std=gnu89 -O3 -Wall -Wextra -pedantic -Werror=format-security -Wfatal-errors -Wstrict-prototypes/CFLAGS += -std=gnu89/' Makefile.linux
+sed -i 's/^CFLAGS = -std=gnu89 -O3 -Wall -Wextra -pedantic -Werror=format-security -Wfatal-errors -Wstrict-prototypes/CFLAGS += -std=gnu89/' Makefile.linux
+sed -i 's/^CFLAGS = -s -std=gnu89 -O3 -Wformat-security -Wall -Wextra -pedantic -Wno-long-long/CFLAGS += -std=gnu89/' libunzip/Makefile
+
+# Fix LDLIBS
+sed -i 's/LDFLAGS =/LDLIBS =/' Makefile.linux
 
 # Fix end-of-line encoding
-for txtfile in license.txt history.txt todo.txt zboy.txt
+for txtfile in colorize.txt history.txt todo.txt zboy.txt
 do
     sed -i 's/\r//' $txtfile
 done
 
 
 %build
-export CFLAGS="%{optflags}"
+%set_build_flags
 %make_build -f Makefile.linux
 
 
@@ -66,6 +59,9 @@ install -p -m 0755 %{name} %{buildroot}%{_bindir}
 
 
 %changelog
+* Sat Jan 26 2019 Andrea Musuruane <musuruan@gmail.com> - 0.70-1
+- Updated to new upstream release
+
 * Sun Aug 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 0.60-8
 - Rebuilt for Fedora 29 Mass Rebuild binutils issue
 
