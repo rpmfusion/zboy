@@ -1,11 +1,11 @@
 Name:           zboy
-Version:        0.70
-Release:        3%{?dist}
+Version:        0.71
+Release:        1%{?dist}
 Summary:        A GameBoy Classic emulator
 
 License:        GPLv3
 URL:            http://zboy.sourceforge.net/
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.xz
 
 BuildRequires:  gcc
 BuildRequires:  SDL2-devel
@@ -59,6 +59,9 @@ install -p -m 0755 %{name} %{buildroot}%{_bindir}
 
 
 %changelog
+* Sun Feb 02 2020 Andrea Musuruane <musuruan@gmail.com> - 0.71-1
+- Updated to new upstream release
+
 * Fri Aug 09 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 0.70-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
