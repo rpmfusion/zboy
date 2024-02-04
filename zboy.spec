@@ -1,6 +1,6 @@
 Name:           zboy
 Version:        0.71
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A GameBoy Classic emulator
 
 License:        GPLv3
@@ -59,6 +59,9 @@ install -p -m 0755 %{name} %{buildroot}%{_bindir}
 
 
 %changelog
+* Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 0.71-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
 * Wed Aug 02 2023 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 0.71-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
 
